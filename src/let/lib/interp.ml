@@ -1,6 +1,7 @@
 open Parser_plaf.Ast
 open Parser_plaf.Parser
 open Ds
+
     
 (** [eval_expr e] evaluates expression [e] *)
 let rec eval_expr : expr -> exp_val ea_result =
@@ -66,6 +67,37 @@ let rec eval_expr : expr -> exp_val ea_result =
     string_of_env >>= fun str ->
     print_endline str; 
     error "Debug called"
+  | EmptyTree(_t) ->
+    return (TreeVal(Empty))
+  | Node(e1,e2,e3) ->
+    eval_expr e1 >>= fun ev1 ->
+    eval_expr e2 >>= tree_of_treeVal >>= fun ev2 ->
+    eval_expr e3 >>= tree_of_treeVal >>= fun ev3 ->
+    return (TreeVal(Node(ev1, ev2, ev3)))
+  | IsEmpty(e) -> 
+    eval_expr e >>= tree_of_treeVal >>= fun ev1 -> 
+    return (BoolVal(ev1=Empty))
+  | CaseT (e1, e2, id1, id2, id3, e3) -> 
+    eval_expr e1 >>= fun ev1 ->
+    eval_expr e2 >>= fun ev2 ->
+    eval_expr e3 >>= fun ev3 ->
+    (match ev1 with
+    | TreeVal(Empty) -> return ev2
+    | TreeVal(Node(id1,id2,id3)) -> return ev3
+    )
+  | Record (fs) -> 
+    failwith "implement"
+  | Proj (e, id) -> failwith "implement"
+    (*eval_expr e >>= record_of_recordVal >>= fun ev ->
+    return ev.id*)
+    and
+    eval_exprs : expr list -> ( exp_val list ) ea_result =
+    fun es ->
+    match es with
+    | [] -> return []
+    | h :: t -> eval_expr h >>= fun i ->
+    eval_exprs t >>= fun l ->
+      return (i::l)
   | _ -> failwith "Not implemented yet!"
 
 (** [eval_prog e] evaluates program [e] *)
