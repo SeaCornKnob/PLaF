@@ -2,7 +2,7 @@
 # OCAMLPARAM: unset
 # Shared cache: disabled
 # Shared cache location: /home/ubuntu/.cache/dune/db
-# Workspace root: /home/ubuntu/Home/documents/s24/cs496/plaf/src/parser_plaf
+# Workspace root: /home/ubuntu/Home/documents/s24/cs496/PLaF/src/parser_plaf
 # Auto-detected concurrency: 2
 # Dune context:
 #  { name = "default"
@@ -14,10 +14,10 @@
 #  ; installed_env =
 #      map
 #        { "INSIDE_DUNE" :
-#            "/home/ubuntu/Home/documents/s24/cs496/plaf/src/parser_plaf/_build/default"
+#            "/home/ubuntu/Home/documents/s24/cs496/PLaF/src/parser_plaf/_build/default"
 #        ; "OCAML_COLOR" : "always"
 #        ; "OPAMCOLOR" : "always"
 #        }
 #  ; instrument_with = []
 #  }
-$ /home/ubuntu/.opam/default/bin/ocamlc.opt -config > /tmp/dune_a0a5de_output
+$ /home/ubuntu/.opam/default/bin/ocamlc.opt -config > /tmp/dune_c3d825_output

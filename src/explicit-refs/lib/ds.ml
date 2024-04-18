@@ -10,7 +10,7 @@ type exp_val =
   | ProcVal of string*expr*env
   | PairVal of exp_val*exp_val
   | TupleVal of exp_val list
-  | RecordVal of (string*exp_val) list
+  | RecordVal of (string*(bool*exp_val)) list
   | UnitVal
   | RefVal of int
 and
@@ -48,9 +48,14 @@ let (>>+) (c:env ea_result) (d:'a ea_result): 'a ea_result =
 let run (c:'a ea_result) : 'a result =
   c EmptyEnv
 
-let sequence (cs: ('a ea_result) list) : ('a list) ea_result  =
-  let mcons p q = p >>= fun x -> q >>= fun y -> return (x::y)
-  in List.fold_right mcons cs (return []) 
+  let rec sequence : ( ’ a ea_result ) list -> ( ’ a list ) ea_result =
+    fun cs ->
+    match cs with
+    | [] -> return []
+    | c :: t ->
+    c >>= fun v ->
+    sequence t >>= fun vs ->
+    return ( v :: vs )
 
 let mapM (f:'a -> 'b ea_result) (vs:'a list) : ('b list) ea_result =
    sequence (List.map f vs)
@@ -152,6 +157,10 @@ let string_of_env : string ea_result =
   | EmptyEnv -> Ok ">>Environment:\nEmpty"
   | _ -> Ok (">>Environment:\n"^ string_of_env' [] env)
 
-
+  let rec addIds fs evs =
+    match fs , evs with
+    | [] ,[] -> []
+    | ( id ,( is_mutable , _ )) :: t1 , v :: t2 -> ( id ,( is_mutable , v )) :: addIds t1 t2
+    | _ , _ -> failwith " error : lists have different sizes "
 
 
